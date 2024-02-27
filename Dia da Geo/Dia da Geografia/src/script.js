@@ -36,6 +36,7 @@ rgbeLoader.load('/environmentMaps/2k/lili.hdr', (environmentMap) =>
  * Textures
  */
 const textureLoader = new THREE.TextureLoader()
+const bitmapLoader = new THREE.ImageBitmapLoader()
 const matcapTexture = textureLoader.load('/textures/matcaps/7.png')
 matcapTexture.colorSpace = THREE.SRGBColorSpace
 
@@ -59,7 +60,6 @@ fontLoader.load(
                 bevelSegments: 5
             }
         )
-        textGeometry.computeBoundingBox()
         textGeometry.translate(
             -22,
             3,
@@ -89,7 +89,6 @@ fontLoader.load(
                 bevelSegments: 5
             }
         )
-        textGeometry.computeBoundingBox()
         textGeometry.translate(
             10,
             1,
@@ -102,6 +101,34 @@ fontLoader.load(
         scene.add(dateText)
 })
 
+fontLoader.load(
+  '/fonts/helvetiker_regular.typeface.json',
+  (font) => {
+      const textGeometry = new TextGeometry(
+          'Escola Secundaria Francisco Rodrigues Lobo',
+          {
+              font: font,
+              size: 0.75,
+              height: 1,
+              curveSegments: 12,
+              bevelEnabled: true,
+              bevelThickness: 0.03,
+              bevelSize: 0.02,
+              bevelOffset: 0.01,
+              bevelSegments: 5
+          }
+      )
+      textGeometry.translate(
+          -21,
+          1,
+          -20,
+      )
+      textGeometry.rotateY(Math.PI/6)
+
+      const material = new THREE.MeshMatcapMaterial({ matcap: matcapTexture})
+      const dateText = new THREE.Mesh(textGeometry, material)
+      scene.add(dateText)
+})
 
 // Scene
 const scene = new THREE.Scene()
@@ -110,480 +137,528 @@ const scene = new THREE.Scene()
  * Objects
  */
 
+const material = new THREE.MeshStandardMaterial({color: '#ffffff'})
+
+const texturePaths = [
+  '/textures/cubes/1/1.jpg',
+  '/textures/cubes/1/2.jpg',
+  '/textures/cubes/1/3.jpg',
+  '/textures/cubes/1/4.jpg',
+  '/textures/cubes/1/5.jpg',
+  '/textures/cubes/1/6.jpg',
+  '/textures/cubes/2/1.jpg',
+  '/textures/cubes/2/2.jpg',
+  '/textures/cubes/2/3.jpg',
+  '/textures/cubes/2/4.jpg',
+  '/textures/cubes/3/1.jpg',
+  '/textures/cubes/3/2.jpg',
+  '/textures/cubes/3/3.jpg',
+  '/textures/cubes/3/4.jpg',
+  '/textures/cubes/3/5.jpg',
+  '/textures/cubes/4/3.jpg',
+  '/textures/cubes/4/2.jpg',
+  '/textures/cubes/4/1.jpg',
+  '/textures/cubes/4/4.jpg',
+  '/textures/cubes/4/7.jpg',
+  '/textures/cubes/4/6.jpg',
+  '/textures/cubes/5/1.jpg',
+  '/textures/cubes/5/2.jpg',
+  '/textures/cubes/5/3.jpg',
+  '/textures/cubes/5/4.jpg',
+  '/textures/cubes/5/5.jpg',
+  '/textures/cubes/5/6.jpg',
+  '/textures/cubes/6/1.jpg',
+  '/textures/cubes/6/2.jpg',
+  '/textures/cubes/6/3.jpg',
+  '/textures/cubes/6/4.jpg',
+  '/textures/cubes/6/5.jpg',
+  '/textures/cubes/6/6.jpg',
+  '/textures/cubes/7/1.jpg',
+  '/textures/cubes/7/2.jpg',
+  '/textures/cubes/7/3.jpg',
+  '/textures/cubes/7/4.jpg',
+  '/textures/cubes/7/5.jpg',
+  '/textures/cubes/7/6.jpg',
+  '/textures/cubes/8/1.jpg',
+  '/textures/cubes/8/2.jpg',
+  '/textures/cubes/8/3.jpg',
+  '/textures/cubes/8/4.jpg',
+  '/textures/cubes/8/5.jpg',
+  '/textures/cubes/8/6.jpg',
+  '/textures/cubes/8/7.jpg',
+  '/textures/cubes/8/8.jpg',
+  '/textures/cubes/8/9.jpg',
+  '/textures/cubes/8/10.jpg',
+  '/textures/cubes/8/11.jpg',
+  '/textures/cubes/8/12.jpg',
+  '/textures/cubes/8/13.jpg',
+  '/textures/cubes/8/14.jpg',
+  '/textures/cubes/8/15.jpg',
+  '/textures/cubes/8/16.jpg',
+  '/textures/cubes/8/17.jpg',
+  '/textures/cubes/8/18.jpg',
+  '/textures/cubes/8/19.jpg',
+  '/textures/cubes/8/20.jpg',
+  '/textures/cubes/8/21.jpg',
+  '/textures/cubes/8/22.jpg',
+  '/textures/cubes/8/23.jpg',
+  '/textures/cubes/9/2.jpg',
+  '/textures/cubes/9/3.jpg',
+  '/textures/cubes/9/4.jpg',
+  '/textures/cubes/9/5.jpg',
+  '/textures/cubes/9/6.jpg',
+  '/textures/cubes/9/7.jpg',
+  '/textures/cubes/9/8.jpg',
+  '/textures/cubes/9/9.jpg',
+  '/textures/cubes/10/1.jpg',
+  '/textures/cubes/10/2.jpg',
+  '/textures/cubes/10/3.jpg',
+  '/textures/cubes/10/4.jpg',
+  '/textures/cubes/10/5.jpg',
+  '/textures/cubes/10/6.jpg',
+  '/textures/cubes/10/7.jpg',
+  '/textures/cubes/10/8.jpg',
+  '/textures/cubes/10/9.jpg',
+  '/textures/cubes/11/1.jpg',
+  '/textures/cubes/11/2.jpg',
+  '/textures/cubes/11/3.jpg',
+  '/textures/cubes/11/4.jpg',
+  '/textures/cubes/11/5.jpg',
+  '/textures/cubes/11/6.jpg',
+  '/textures/cubes/11/7.jpg',
+  '/textures/cubes/11/8.jpg',
+  '/textures/cubes/12/1.jpg',
+  '/textures/cubes/12/2.jpg',
+  '/textures/cubes/12/3.jpg',
+  '/textures/cubes/12/4.jpg',
+  '/textures/cubes/12/5.jpg',
+  '/textures/cubes/12/6.jpg',
+  '/textures/cubes/12/7.jpg',
+  '/textures/cubes/12/8.jpg'
+];
+
+const loadTexture = async (path) => {
+  return new Promise((resolve, reject) => {
+      textureLoader.load(path, resolve, undefined, reject);
+  });
+};
+
+const assignTexturesToCubes = async () => {
+
+  for (let i = 0; i < cubeGroup.children.length; i++) {
+      const cube = cubeGroup.children[i];
+      const cubeMaterials = [];
+
+      for (let j = 0; j < 6; j++) { // Assuming each cube has 6 faces
+          const textureIndex = (i * 6 + j) % texturePaths.length;
+          const texturePath = texturePaths[textureIndex];
+
+          try {
+              const texture = await loadTexture(texturePath);
+              const material = new THREE.MeshBasicMaterial({ map: texture });
+              cubeMaterials.push(material);
+          } catch (error) {
+              console.error(`Error loading texture at index ${textureIndex}:`, error);
+          }
+      }
+
+      cube.material = cubeMaterials;
+  }
+}
+
 // Cubes Bottom
 
 // Center
-const cubeBCTexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeBCTexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 const cubeBC = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeBCTexture
+    material
 )
 cubeBC.position.y = -1
 
 // South
-const cubeBSTexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeBSTexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 const cubeBS = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeBSTexture
+    material
 )
 cubeBS.position.set(0, -1, -1)
 
 // North
-const cubeBNTexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeBNTexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 const cubeBN = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeBNTexture
+    material
 )
 cubeBN.position.set(0, -1, 1)
 
 // East
-const cubeBETexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeBETexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 const cubeBE = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeBETexture
+    material
 )
 cubeBE.position.set(1, -1, 0)
 
 // West
-const cubeBWTexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeBWTexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 const cubeBW = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeBWTexture
+    material
 )
 cubeBW.position.set(-1, -1, 0)
 
 // Northeast
-const cubeBNETexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeBNETexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 const cubeBNE = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeBNETexture
+    material
 )
 cubeBNE.position.set(1, -1, -1)
 
 // Northwest
-const cubeBNWTexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeBNWTexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 const cubeBNW = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeBNWTexture
+    material
 )
 cubeBNW.position.set(-1, -1, -1)
 
 // Southeast
-const cubeBSETexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeBSETexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 const cubeBSE = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeBSETexture
+    material
 )
 cubeBSE.position.set(1, -1, 1)
 
 // Southwest
-const cubeBSWTexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeBSWTexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 const cubeBSW = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeBSWTexture
+    material
 )
 cubeBSW.position.set(-1, -1, 1)
 
 // Cubes Center
 
 // Center
-const cubeCCTexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeCCTexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 const cubeCC = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeCCTexture
+    material
 )
 
 // South
-const cubeCSTexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeCSTexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 const cubeCS = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeCSTexture
+    material
 )
 cubeCS.position.set(0, 0, -1)
 
 // North
-const cubeCNTexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeCNTexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 const cubeCN = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeCNTexture
+    material
 )
 cubeCN.position.set(0, 0, 1)
 
 // East
-const cubeCETexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeCETexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 const cubeCE = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeCETexture
+    material
 )
 cubeCE.position.set(1, 0, 0)
 
 // West
-const cubeCWTexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeCWTexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 const cubeCW = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeCWTexture
+    material
 )
 cubeCW.position.set(-1, 0, 0)
 
 // Northeast
-const cubeCNETexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeCNETexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 const cubeCNE = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeCNETexture
+    material
 )
 cubeCNE.position.set(1, 0, -1)
 
 // Northwest
-const cubeCNWTexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeCNWTexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 const cubeCNW = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeCNWTexture
+    material
 )
 cubeCNW.position.set(-1, 0, -1)
 // Southeast
-const cubeCSETexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeCSETexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 const cubeCSE = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeCSETexture
+    material
 )
 cubeCSE.position.set(1, 0, 1)
 
 // Southwest
-const cubeCSWTexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeCSWTexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 
 const cubeCSW = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeCSWTexture
+    material
 )
 cubeCSW.position.set(-1, 0, 1)
 
 // Cubes Top
 
 // Center
-const cubeTCTexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeTCTexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 
 const cubeTC = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeTCTexture
+    material
 )
 cubeTC.position.y = 1
 
 // South
-const cubeTSTexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
+// const cubeTSTexture = [
+//     '/textures/cubes/6/1.jpg',
+//     '/textures/cubes/6/2.jpg',
+//     '/textures/cubes/6/3.jpg',
+//     '/textures/cubes/6/4.jpg',
+//     '/textures/cubes/6/5.jpg',
+//     '/textures/cubes/6/6.jpg',
+//   ].map(pic => {
+//     return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
+//   });
 
 const cubeTS = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeTSTexture
+    material
 )
 cubeTS.position.set(0, 1, -1)
 
 // North
-const cubeTNTexture = [
-    '/textures/cubes/7/1.jpg',
-    '/textures/cubes/7/2.jpg',
-    '/textures/cubes/7/3.jpg',
-    '/textures/cubes/7/4.jpg',
-    '/textures/cubes/7/5.jpg',
-    '/textures/cubes/7/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
-
 const cubeTN = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeTNTexture
+    material
 )
 cubeTN.position.set(0, 1, 1)
 
 // East
-const cubeTETexture = [
-    '/textures/cubes/6/1.jpg',
-    '/textures/cubes/6/2.jpg',
-    '/textures/cubes/6/3.jpg',
-    '/textures/cubes/6/4.jpg',
-    '/textures/cubes/6/5.jpg',
-    '/textures/cubes/6/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
-
 const cubeTE = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeTETexture
+    material
 )
 cubeTE.position.set(1, 1, 0)
 
 // West
-const cubeTWTexture = [
-    '/textures/cubes/5/1.jpg',
-    '/textures/cubes/5/2.jpg',
-    '/textures/cubes/5/3.jpg',
-    '/textures/cubes/5/4.jpg',
-    '/textures/cubes/5/5.jpg',
-    '/textures/cubes/5/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
-
 const cubeTW = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeTWTexture
+    material
 )
 cubeTW.position.set(-1, 1, 0)
 
 // Northeast
-const cubeTNETexture = [
-    '/textures/cubes/4/3.jpg',
-    '/textures/cubes/4/2.jpg',
-    '/textures/cubes/4/1.jpg',
-    '/textures/cubes/4/4.jpg',
-    '/textures/cubes/4/7.jpg',
-    '/textures/cubes/4/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
 const cubeTNE = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeTNETexture
+    material
 )
 cubeTNE.position.set(1, 1, -1)
 
 // Northwest
-const cubeTNWTexture = [
-    '/textures/cubes/3/1.jpg',
-    '/textures/cubes/3/2.jpg',
-    '/textures/cubes/3/3.jpg',
-    '/textures/cubes/3/4.jpg',
-    '/textures/cubes/3/5.jpg',
-    '/textures/cubes/1/7.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
-
 const cubeTNW = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeTNWTexture
+    material
 )
 cubeTNW.position.set(-1, 1, -1)
 
 // Southeast
-const cubeTSETexture = [
-    '/textures/cubes/1/1.jpg',
-    '/textures/cubes/1/2.jpg',
-    '/textures/cubes/1/3.jpg',
-    '/textures/cubes/1/4.jpg',
-    '/textures/cubes/1/5.jpg',
-    '/textures/cubes/1/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
-
 const cubeTSE = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeTSETexture
+    material
 )
 cubeTSE.position.set(1, 1, 1)
 
 // Southwest
-const cubeTSWTexture = [
-    '/textures/cubes/2/1.jpg',
-    '/textures/cubes/2/2.jpg',
-    '/textures/cubes/2/3.jpg',
-    '/textures/cubes/2/4.jpg',
-    '/textures/cubes/1/5.jpg',
-    '/textures/cubes/1/6.jpg',
-  ].map(pic => {
-    return new THREE.MeshBasicMaterial({map: textureLoader.load(pic)});
-  });
-
-// gltfLoader.load('/textures/cubes/1/cubebin.glb', (gltf) =>
-// {
-//   scene.add(gltf.scene.children[0])
-// })
-
 const cubeTSW = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
-    cubeTSWTexture
+    material
 )
 cubeTSW.position.set(-1, 1, 1)
 
@@ -595,6 +670,8 @@ cubeGroup.add(
     cubeTC, cubeTS, cubeTN, cubeTE, cubeTW, cubeTNE, cubeTNW, cubeTSE, cubeTSW)
 
 scene.add(cubeGroup)
+
+assignTexturesToCubes()
 
 /**
  * Sizes
@@ -891,6 +968,16 @@ const tick = () => {
             console.log('mouse leave')
         }
         currentIntersect = null
+    }
+
+    if(focusCube){
+      setTimeout(() => {
+        document.querySelector("#generalInfo").style.visibility = "hidden"
+        document.querySelector("#cubeInfo").style.visibility = "visible"
+      }, 1000)
+    } else {
+      document.querySelector("#generalInfo").style.visibility = "visible"
+      document.querySelector("#cubeInfo").style.visibility = "hidden"
     }
 
     // Update controls

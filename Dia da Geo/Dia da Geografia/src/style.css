@@ -17,3 +17,19 @@ body
     left: 0;
     outline: none;
 }
+
+#generalInfo {
+    position:absolute;
+    bottom: 10px;
+    text-align: center;
+    color: #ffffff;
+    font-family: 'Helvetiker';
+}
+
+#cubeInfo {
+    position:absolute;
+    bottom: 10px;
+    text-align: center;
+    color: #ffffff;
+    font-family: 'Helvetiker';
+}
