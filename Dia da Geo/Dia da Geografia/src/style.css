@@ -21,6 +21,7 @@ body
 #generalInfo {
     position:absolute;
     bottom: 10px;
+    left: 10px;
     text-align: center;
     color: #ffffff;
     font-family: 'Helvetiker';
@@ -29,6 +30,7 @@ body
 #cubeInfo {
     position:absolute;
     bottom: 10px;
+    left: 10px;
     text-align: center;
     color: #ffffff;
     font-family: 'Helvetiker';
