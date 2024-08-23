@@ -245,11 +245,11 @@ const loadTexture = async (path) => {
 
 const assignTexturesToCubes = async () => {
 
-  for (let i = 0; i < cubeGroup.children.length; i++) {
+  for (let i = cubeGroup.children.length - 1; i >= 0; i--) {
       const cube = cubeGroup.children[i];
       const cubeMaterials = [];
 
-      for (let j = 0; j < 6; j++) { // Assuming each cube has 6 faces
+      for (let j = 0; j < 6; j++) {
           const textureIndex = (i * 6 + j) % texturePaths.length;
           const texturePath = texturePaths[textureIndex];
 
